@@ -1,13 +1,129 @@
 
+turtles-own [
+  susceptible?
+  infected?
+  vaccinated?
+  infection-length
+  recovery-time
+]
+
+breed [ uninfected A ]
+breed [ infected B ]
+
+to setup
+  clear-all
+  setup-people
+  reset-ticks
+end
+
+to setup-people
+  create-uninfected initial-number-uninfected [
+    set susceptible? true
+    set infected? false
+    set vaccinated? false
+
+    set shape "person"
+    set color white
+    setxy random-xcor random-ycor
+  ]
+
+  create-infected initial-number-infected [
+    set susceptible? false
+    set infected? true
+    set vaccinated? false
+    set infection-length random recovery-time
+
+    set shape "person"
+    set color red
+    setxy random-xcor random-ycor
+  ]
+end
+
+to assign-color
+  if infected?
+    [ set color red ]
+  if vaccinated?
+    [ set color blue ]
+  if susceptible?
+    [ set color white ]
+end
+
+to go
+  ; stop the model if there are no turtles at all
+  if not any? turtles [ stop ]
+
+  ; stop the model if there are no infected
+  if not any? infected [ user-message "The COVID-19 has been defeated!" stop ]
+
+  ; stop the model if all of the turtles has been infected
+  if all? turtles [ infected? ] [ user-message "The entire community has been infected!" stop ]
+
+
+  ; actions for susceptbile turltes
+  ask uninfected [
+    move
+  ]
+
+  ; actions for infected turtles
+  ask infected [
+    move
+    infect
+    recover
+  ]
+  tick
+end
+
+to move
+  rt random 50
+  lt random 50
+  fd 1
+end
+
+to infect
+  let nearby-uninfected (turtles-on neighbors)
+    with [ not infected? ]
+
+    if nearby-uninfected != nobody [
+      ask nearby-uninfected [
+        if vaccinated? [ set infection-chance infection-chance * 1.95 ] ;
+        if random-float 100 < infection-chance [
+          set infected? true
+          set susceptible? false
+          assign-color
+        ]
+      ]
+    ]
+end
+
+to recover
+  set infection-length infection-length + 1
+
+  if infection-length > recovery-time
+  [
+    if random-float 100 < recovery-chance
+    [
+      set infected? false
+      set susceptible? true
+      assign-color
+    ]
+  ]
+end
+
+to get-vaccinated
+end
+
+to vaccinate
+end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 428
 10
-998
-581
+886
+469
 -1
 -1
-17.03030303030303
+18.0
 1
 10
 1
@@ -17,12 +133,12 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
-0
-0
+-12
+12
+-12
+12
+1
+1
 1
 ticks
 30.0
@@ -35,177 +151,7 @@ CHOOSER
 vaccine
 vaccine
 "Astra Zeneca (70.4%)" "Sinovac (65% ~ 91%)" "Sputnik (91.6%)" "Janssen (66.9%)" "Bharat Biotech (80.6%)" "Pfizer (95%)" "Moderna (94.1%)"
-0
-
-SLIDER
-20
-77
-182
-110
-initial-number-masked
-initial-number-masked
-0
-100
-51.0
 1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-186
-77
-348
-110
-initial-number-unmasked
-initial-number-unmasked
-0
-100
-50.0
-1
-1
-NIL
-HORIZONTAL
-
-BUTTON
-188
-155
-251
-188
-setup
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-254
-155
-317
-188
-go
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-0
-
-MONITOR
-118
-217
-192
-262
-infected
-count infected
-3
-1
-11
-
-MONITOR
-43
-217
-116
-262
-healthy
-count healthy
-3
-1
-11
-
-MONITOR
-193
-217
-265
-262
-dead
-count dead
-3
-1
-11
-
-PLOT
-21
-273
-409
-526
-Populations
-Time
-pop.
-0.0
-100.0
-0.0
-100.0
-true
-true
-"" ""
-PENS
-"healthy" 1.0 0 -955883 true "" "plot count healthy"
-"infected" 1.0 0 -2674135 true "" "plot count infected"
-"dead" 1.0 0 -16777216 true "" "plot count dead"
-"vaccinated" 1.0 0 -11221820 true "" "plot count vaccinated"
-
-MONITOR
-302
-215
-375
-260
-vaccinated
-count vaccinated
-3
-1
-11
-
-SLIDER
-20
-113
-183
-146
-vaccination-centers
-vaccination-centers
-0
-10
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-186
-113
-351
-146
-vaccination-tendency
-vaccination-tendency
-0
-10
-3.0
-1
-1
-NIL
-HORIZONTAL
-
-MONITOR
-77
-154
-151
-199
-% infected
-%healthy
-17
-1
-11
 
 TEXTBOX
 308
@@ -217,10 +163,139 @@ TEXTBOX
 0.0
 1
 
+BUTTON
+94
+207
+157
+240
+setup
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+181
+205
+244
+238
+go
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
+
+SLIDER
+22
+84
+209
+117
+initial-number-uninfected
+initial-number-uninfected
+0
+250
+64.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+215
+84
+388
+117
+initial-number-infected
+initial-number-infected
+0
+300
+19.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+31
+125
+203
+158
+infection-chance
+infection-chance
+0
+100
+5.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+212
+128
+390
+161
+average-recovery-time
+average-recovery-time
+0
+600
+240.0
+5
+1
+NIL
+HORIZONTAL
+
+PLOT
+18
+246
+364
+446
+Populations
+hours
+# of people
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Infected" 1.0 0 -2674135 true "" "plot count turtles with [ infected? ]"
+"Susceptible" 1.0 0 -16777216 true "" "plot count turtles with [ susceptible? and not vaccinated? ]"
+"Vaccinated" 1.0 0 -13345367 true "" "plot count turtles with [ susceptible? and vaccinated? ]"
+
+SLIDER
+101
+165
+273
+198
+recovery-chance
+recovery-chance
+0
+100
+75.0
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+This model simulates a real-life visualization of the COVID-19 pandemic towards a certain subset of the Philippine population. It illustrates the effects of how vaccination and wearing masks helps in fighting against the chance of being infected by the COVID-19 virus.
 
 ## HOW IT WORKS
 
@@ -263,6 +338,27 @@ airplane
 true
 0
 Polygon -7500403 true true 150 0 135 15 120 60 120 105 15 165 15 195 120 180 135 240 105 270 120 285 150 270 180 285 210 270 165 240 180 180 285 195 285 165 180 105 180 60 165 15
+
+android
+false
+0
+Circle -7500403 true true 110 5 80
+Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Rectangle -7500403 true true 127 79 172 94
+Polygon -7500403 true true 195 90 240 150 225 180 165 105
+Polygon -7500403 true true 105 90 60 150 75 180 135 105
+Rectangle -16777216 true false 135 30 165 60
+
+android sick
+false
+0
+Circle -7500403 true true 110 5 80
+Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Rectangle -7500403 true true 127 79 172 94
+Polygon -7500403 true true 195 90 240 150 225 180 165 105
+Polygon -7500403 true true 105 90 60 150 75 180 135 105
+Rectangle -16777216 true false 135 30 165 60
+Circle -2674135 true false 168 183 85
 
 arrow
 true
@@ -420,6 +516,16 @@ true
 0
 Line -7500403 true 150 0 150 150
 
+masked person
+false
+0
+Circle -7500403 true true 110 5 80
+Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Rectangle -7500403 true true 127 79 172 94
+Polygon -7500403 true true 195 90 240 150 225 180 165 105
+Polygon -7500403 true true 105 90 60 150 75 180 135 105
+Rectangle -11221820 true false 120 45 180 75
+
 pentagon
 false
 0
@@ -433,6 +539,16 @@ Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300
 Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
+
+person sick
+false
+0
+Circle -7500403 true true 110 5 80
+Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Rectangle -7500403 true true 127 79 172 94
+Polygon -7500403 true true 195 90 240 150 225 180 165 105
+Polygon -7500403 true true 105 90 60 150 75 180 135 105
+Circle -2674135 true false 163 178 95
 
 plant
 false
