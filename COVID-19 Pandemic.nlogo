@@ -1,4 +1,3 @@
-
 turtles-own [
   susceptible?
   infected?
@@ -79,7 +78,7 @@ to move
   fd 1
 end
 
-to infect
+to infect ;; can be implemeted with either eat-sheep from Predation or infect from epiDem Basic
   let nearby-uninfected (turtles-on neighbors)
     with [ not infected? ]
 
@@ -95,7 +94,7 @@ to infect
     ]
 end
 
-to recover
+to recover ;; maybe-recover function from the epiDem basic
   set infection-length infection-length + 1
 
   if infection-length > recovery-time
@@ -109,12 +108,11 @@ to recover
   ]
 end
 
-to get-vaccinated
+to get-vaccinated ;; Chase function in Disease Solo model
 end
 
 to vaccinate
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 428
