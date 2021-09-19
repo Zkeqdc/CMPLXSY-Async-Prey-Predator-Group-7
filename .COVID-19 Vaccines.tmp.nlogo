@@ -1,8 +1,6 @@
 globals
 [
   vaccine-multiplier
-  vaccinated-recovery
-  unvaccinated-recovery
 ]
 
 turtles-own
@@ -10,12 +8,11 @@ turtles-own
   infected?           ;; If true, the person is infected
   cured?              ;; If true, the person has lived through an infection.
                       ;; They cannot be re-infected.
-  vaccinated?
+  vaccinated?         ;; If true, an individual is vaccinated
   susceptible?        ;; Tracks whether the person was initially susceptible
   infection-length    ;; How long the person has been infected
   recovery-time       ;; Time (in hours) it takes before the person has a chance to recover from the infection
   immunity
-
 ]
 
 
@@ -32,13 +29,11 @@ to setup
 end
 
 to setup-global
+  ;; Set-up four vaccination centers equidistant to each other in the area
   ask patch (- max-pxcor / 2 )  (- max-pycor / 2 ) [ set pcolor cyan ]
   ask patch (- max-pxcor / 2 )  ( max-pycor / 2 ) [ set pcolor cyan ]
   ask patch ( max-pxcor / 2 )  ( max-pycor / 2 )  [ set pcolor cyan ]
   ask patch ( max-pxcor / 2 )  (- max-pycor / 2 ) [ set pcolor cyan ]
-
-  set unvaccinated-recovery 0
-  set vaccinated-recovery 0
 
   if vaccine-brand = "Astra Zeneca (70.4%)" [
     set vaccine-multiplier 1.704
@@ -74,7 +69,7 @@ to setup-people
 
     ;; Since the possible contact with an infected person would only be momentarily because the turtles are always moving
     ;; there's just around 50/50 chance of getting infected
-    set immunity random-float 20 + 40
+    set immunity random-float 2 + 40
 
     set shape "person"
     set color white
@@ -136,6 +131,9 @@ to go
   if all? turtles [ not infected? ]
     [ stop ]
 
+  if all? turtles [ infected? ]
+    [ stop ]
+
   ask turtles
     [ move
       get-vaccinated ]
@@ -173,7 +171,7 @@ to infect  ;; turtle procedure
      ]
 end
 
-;;
+
 to recover
   set infection-length infection-length + 1
 
@@ -185,14 +183,6 @@ to recover
     [
       set infected? false
       set cured? true
-      if vaccinated?
-      [
-        set vaccinated-recovery vaccinated-recovery + 1
-      ]
-      if not vaccinated?
-      [
-        set unvaccinated-recovery unvaccinated-recovery + 1
-      ]
     ]
   ]
 end
@@ -322,8 +312,8 @@ recovery-chance
 recovery-chance
 10
 100
-60.0
-5
+50.0
+1
 1
 %
 HORIZONTAL
@@ -352,7 +342,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-17.0
+27.32
 0.01
 1
 %
