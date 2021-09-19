@@ -39,7 +39,6 @@ to setup-global
   ask patch ( max-pxcor / 2 )  ( max-pycor / 2 )  [ set pcolor cyan ]
   ask patch ( max-pxcor / 2 )  (- max-pycor / 2 ) [ set pcolor cyan ]
 
-  set number-death 0
   set unvaccinated-recovery 0
   set vaccinated-recovery 0
 
@@ -77,7 +76,7 @@ to setup-people
 
     ;; Since the possible contact with an infected person would only be momentarily because the turtles are always moving
     ;; there's just around 50/50 chance of getting infected
-    set immunity 50
+    set immunity 5
 
     set shape "person"
     set color white
@@ -355,7 +354,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-27.32
+17.0
 0.01
 1
 %
@@ -369,7 +368,7 @@ CHOOSER
 vaccine-brand
 vaccine-brand
 "Astra Zeneca (70.4%)" "Sinovac (51%)" "Sputnik (91.6%)" "Janssen (66.9%)" "Bharat Biotech (80.6%)" "Pfizer (95%)" "Moderna (94.1%)"
-5
+0
 
 SWITCH
 335
@@ -521,17 +520,6 @@ true
 PENS
 "Unvaccinated" 1.0 0 -2674135 true "" "plot count turtles with [ infected? and not vaccinated? ]"
 "Vaccinated" 1.0 0 -955883 true "" "plot count turtles with [ infected? and vaccinated? ]"
-
-MONITOR
-299
-741
-356
-786
-Deaths
-number-death
-17
-1
-11
 
 @#$#@#$#@
 @#$#@#$#@

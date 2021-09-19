@@ -76,7 +76,7 @@ to setup-people
 
     ;; Since the possible contact with an infected person would only be momentarily because the turtles are always moving
     ;; there's just around 50/50 chance of getting infected
-    set immunity 50
+    set immunity random-float 20 + 40
 
     set shape "person"
     set color white
@@ -354,7 +354,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-27.32
+17.0
 0.01
 1
 %
