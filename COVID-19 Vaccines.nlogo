@@ -109,6 +109,7 @@ end
 ;; Red is an infected person
 ;; Blue is a vaccinated person, but not yet infected
 ;; Cyan is a vaccinated person, but already recovered
+;; Orange is a vaccinated person, but got infected
 
 to assign-color  ;; turtle procedure
   if infected?
@@ -353,7 +354,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-100.0
+27.32
 0.01
 1
 %

@@ -39,6 +39,7 @@ to setup-global
   ask patch ( max-pxcor / 2 )  ( max-pycor / 2 )  [ set pcolor cyan ]
   ask patch ( max-pxcor / 2 )  (- max-pycor / 2 ) [ set pcolor cyan ]
 
+  set number-death 0
   set unvaccinated-recovery 0
   set vaccinated-recovery 0
 
@@ -109,6 +110,7 @@ end
 ;; Red is an infected person
 ;; Blue is a vaccinated person, but not yet infected
 ;; Cyan is a vaccinated person, but already recovered
+;; Orange is a vaccinated person, but got infected
 
 to assign-color  ;; turtle procedure
   if infected?
@@ -353,7 +355,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-100.0
+27.32
 0.01
 1
 %
@@ -441,7 +443,7 @@ true
 "" ""
 PENS
 "Vaccinated" 1.0 0 -11221820 true "" "plot count turtles with [ not infected? and vaccinated? ]"
-"Recovered" 1.0 0 -10899396 true "" "plot count turtles with [ not infected? and not vaccinated? ]"
+"Unvaccinated" 1.0 0 -10899396 true "" "plot count turtles with [ not infected? and not vaccinated? ]"
 
 MONITOR
 199
@@ -519,6 +521,17 @@ true
 PENS
 "Unvaccinated" 1.0 0 -2674135 true "" "plot count turtles with [ infected? and not vaccinated? ]"
 "Vaccinated" 1.0 0 -955883 true "" "plot count turtles with [ infected? and vaccinated? ]"
+
+MONITOR
+299
+741
+356
+786
+Deaths
+number-death
+17
+1
+11
 
 @#$#@#$#@
 @#$#@#$#@
