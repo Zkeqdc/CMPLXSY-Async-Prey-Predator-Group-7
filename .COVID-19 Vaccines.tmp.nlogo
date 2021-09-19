@@ -15,9 +15,7 @@ turtles-own
   infection-length    ;; How long the person has been infected
   recovery-time       ;; Time (in hours) it takes before the person has a chance to recover from the infection
   immunity
-  nb-infected         ;; Number of secondary infections caused by an
-                      ;; infected person at the end of the tick
-  nb-recovered        ;; Number of recovered people at the end of the tick
+
 ]
 
 
@@ -76,7 +74,7 @@ to setup-people
 
     ;; Since the possible contact with an infected person would only be momentarily because the turtles are always moving
     ;; there's just around 50/50 chance of getting infected
-    set immunity 5
+    set immunity random-float 20 + 40
 
     set shape "person"
     set color white
@@ -368,7 +366,7 @@ CHOOSER
 vaccine-brand
 vaccine-brand
 "Astra Zeneca (70.4%)" "Sinovac (51%)" "Sputnik (91.6%)" "Janssen (66.9%)" "Bharat Biotech (80.6%)" "Pfizer (95%)" "Moderna (94.1%)"
-0
+5
 
 SWITCH
 335
