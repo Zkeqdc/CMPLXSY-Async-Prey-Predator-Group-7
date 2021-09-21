@@ -35,6 +35,7 @@ to setup-global
   ask patch ( max-pxcor / 2 )  ( max-pycor / 2 )  [ set pcolor cyan ]
   ask patch ( max-pxcor / 2 )  (- max-pycor / 2 ) [ set pcolor cyan ]
 
+  ;; Vaccine brand selector to set the multiplier for the immunity when a turtle gets vaccinated
   if vaccine-brand = "Astra Zeneca (70.4%)" [
     set vaccine-multiplier 1.704
   ]
@@ -69,7 +70,7 @@ to setup-people
 
     ;; Since the possible contact with an infected person would only be momentarily because the turtles are always moving
     ;; there's just around 50/50 chance of getting infected
-    set immunity random-float 2 + 40
+    set immunity random-float 10 + 40
 
     set shape "person"
     set color white
@@ -124,7 +125,7 @@ end
 
 ;;;
 ;;; GO PROCEDURES
-;;;
+
 
 
 to go
@@ -156,7 +157,7 @@ to move  ;; turtle procedure
   fd 1
 end
 
-
+;; An infected turtle can infect other susceptible turtles around their proximity
 to infect  ;; turtle procedure
    let nearby-uninfected (turtles-on neighbors)
      with [ not infected? ]
@@ -171,7 +172,8 @@ to infect  ;; turtle procedure
      ]
 end
 
-
+;; An infected turtle can recover within the length of the infection time,
+;; they can recover earlier than the assigned recovery time depending on the recovery chance
 to recover
   set infection-length infection-length + 1
 
@@ -200,7 +202,7 @@ to get-vaccinated
   ]
 end
 
-
+;; Displays the immunity value of each individual turtles
 to display-immunity
   ask turtles [ set label "" ]
   if show-immunity? [
@@ -276,9 +278,9 @@ SLIDER
 91
 initial-people
 initial-people
-50
+0
 400
-100.0
+20.0
 5
 1
 NIL
@@ -342,7 +344,7 @@ average-vaccination-tendency
 average-vaccination-tendency
 0
 100
-27.32
+16.54
 0.01
 1
 %
